@@ -10,10 +10,10 @@ var fs = require('fs');
 export default function handler(req: any, res: any){
     console.log("################## api status call")
 
-    function sendData(code: any, msg: string) {
+    function sendData(code: any, data: { [key: string]: string }) {
         console.log("sendData")
-        console.log(msg);
-        res.status(code).json({data: msg});
+        console.log(data);
+        res.status(code).json({data: data});
         res.end();
     }
 
@@ -22,7 +22,9 @@ export default function handler(req: any, res: any){
         baudRate: 9600}, 
         function (err) {
             if (err) {
-              return console.log('Error: ', err.message)
+                sendData(200, {"msg": "Cannot open device"})
+                return console.log('Error: ', err.message)
+              
             }
         }
     )
@@ -35,7 +37,7 @@ export default function handler(req: any, res: any){
 
         console.log(buffer)
         if (answers.length > 0) {
-            sendData(200, answers[0])
+            sendData(200, {"countdown": answers[0]})
             port.close();
         }
     })
